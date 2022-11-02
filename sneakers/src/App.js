@@ -1,7 +1,12 @@
+import Card from './components/Card';
+import Drawer from './components/Draver';
+import Header from './components/Header';
+
 function App() {
   return (
     <div className="wrapper clear">
-      <div className="overlay">
+      <Drawer />
+      {/* <div style={{ display: 'none' }} className="overlay">
         <div className="drawer">
           <h2 className="d-flex justify-between mb-30 ">
             Cart
@@ -57,9 +62,9 @@ function App() {
             </div>
           </div>
         </div>
-      </div>
-
-      <header className="d-flex justify-between align-center p-40">
+      </div> */}
+      <Header />
+      {/* <header className="d-flex justify-between align-center p-40">
         <div className="d-flex align-center">
           <img width={40} height={40} src="img/logo.png" alt="Logotype" />
           <div>
@@ -76,7 +81,7 @@ function App() {
             <img width={18} height={18} src="img/user.svg" alt="user" />
           </li>
         </ul>
-      </header>
+      </header> */}
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>All sneakers</h1>
@@ -87,7 +92,11 @@ function App() {
         </div>
 
         <div className="d-flex">
-          <div className="card">
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          {/* <div className="card">
             <div className="favorite">
               <img src="img/unliked.svg" alt="Unliked" />
             </div>
@@ -107,8 +116,8 @@ function App() {
                 <img height={11} width={11} src="img/plus.svg" alt="Plus" />
               </button>
             </div>
-          </div>
-          <div className="card">
+          </div> */}
+          {/* <div className="card">
             <img
               height={112}
               width={133}
@@ -161,7 +170,7 @@ function App() {
                 <img height={11} width={11} src="img/plus.svg" alt="Plus" />
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
