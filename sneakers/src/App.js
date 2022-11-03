@@ -2,6 +2,13 @@ import Card from './components/Card';
 import Drawer from './components/Draver';
 import Header from './components/Header';
 
+const arr = [
+  { title: 'Nike Blazer for men', price: '500$', imgUrl: 'img/sneakers/1.jpg' },
+  { title: 'Nike Blazer for men', price: '600$', imgUrl: 'img/sneakers/2.jpg' },
+  { title: 'Nike Blazer for men', price: '700$', imgUrl: 'img/sneakers/3.jpg' },
+  { title: 'Nike Blazer for men', price: '800$', imgUrl: 'img/sneakers/4.jpg' },
+  { title: 'Nike Blazer for men', price: '900$', imgUrl: 'img/sneakers/5.jpg' },
+];
 function App() {
   return (
     <div className="wrapper clear">
@@ -92,10 +99,20 @@ function App() {
         </div>
 
         <div className="d-flex">
+          {/* <Card
+            title="Nike Blazer for men"
+            price={500}
+            imgUrl="img/sneakers/1.jpg"
+          />
+          <Card title="Nike for men" price={600} imgUrl="img/sneakers/2.jpg" /> */}
+
+          {arr.map((obj) => (
+            <Card title={obj.title} price={obj.price} imgUrl={obj.imgUrl} />
+          ))}
+          {/* <Card />
           <Card />
           <Card />
-          <Card />
-          <Card />
+          <Card /> */}
           {/* <div className="card">
             <div className="favorite">
               <img src="img/unliked.svg" alt="Unliked" />
