@@ -1,7 +1,5 @@
 import styles from './Card.module.scss';
 
-console.log(styles);
-
 function Card(props) {
   return (
     <div className={styles.card}>
