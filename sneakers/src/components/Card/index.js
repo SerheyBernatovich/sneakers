@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './Card.module.scss';
 
 function Card(props) {
@@ -7,7 +7,7 @@ function Card(props) {
   const onClickPlus = () => {
     setIsAdded(!isAdded);
   };
-  // useEffect(() => {
+  // React.useEffect(() => {
   //   console.log('Change');
   // }, [isAdded]);
   return (
