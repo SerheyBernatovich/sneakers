@@ -1,3 +1,4 @@
+import React from 'react';
 import Card from './components/Card';
 import Drawer from './components/Draver';
 import Header from './components/Header';
@@ -29,7 +30,8 @@ function App() {
               title={obj.title}
               price={obj.price}
               imgUrl={obj.imgUrl}
-              onClick={() => console.log(obj)}
+              onFavorite={() => console.log('add to...')}
+              onPlus={() => console.log('on Click Plus')}
             />
           ))}
         </div>
