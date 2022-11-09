@@ -3,18 +3,21 @@ import Card from './components/Card';
 import Drawer from './components/Draver';
 import Header from './components/Header';
 
-const arr = [
-  { title: 'Nike Blazer for men', price: '500$', imgUrl: 'img/sneakers/1.jpg' },
-  { title: 'Nike Blazer for men', price: '600$', imgUrl: 'img/sneakers/2.jpg' },
-  { title: 'Nike Blazer for men', price: '700$', imgUrl: 'img/sneakers/3.jpg' },
-  { title: 'Nike Blazer for men', price: '800$', imgUrl: 'img/sneakers/4.jpg' },
-  { title: 'Nike Blazer for men', price: '900$', imgUrl: 'img/sneakers/5.jpg' },
-];
 function App() {
+  const [items, setItem] = React.useState([]);
   const [cartOpened, setCartOpened] = React.useState(false);
+
+  React.useEffect(() => {
+    fetch('https://636b93f17f47ef51e134692f.mockapi.io/item')
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => setItem(json));
+  }, []);
+
   return (
     <div className="wrapper clear">
-      {cartOpened ? <Drawer onClose={() => setCartOpened(false)} /> : null}
+      {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
       <Header onClickCart={() => setCartOpened(true)} />
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
@@ -25,8 +28,8 @@ function App() {
           </div>
         </div>
 
-        <div className="d-flex">
-          {arr.map((obj) => (
+        <div className="d-flex flex-wrap">
+          {items.map((obj) => (
             <Card
               title={obj.title}
               price={obj.price}
