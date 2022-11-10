@@ -2,9 +2,10 @@ import React from 'react';
 import { useState } from 'react';
 import styles from './Card.module.scss';
 
-function Card(props) {
+function Card({ onFavorite, onPlus, imgUrl, title, price }) {
   const [isAdded, setIsAdded] = useState(false);
   const onClickPlus = () => {
+    onPlus({ title, imgUrl, price });
     setIsAdded(!isAdded);
   };
   // React.useEffect(() => {
@@ -12,15 +13,15 @@ function Card(props) {
   // }, [isAdded]);
   return (
     <div className={styles.card}>
-      <div className={styles.favorite} onClick={props.onFavorite}>
+      <div className={styles.favorite} onClick={onFavorite}>
         <img src="img/unliked.svg" alt="Unliked" />
       </div>
-      <img height={112} width={133} src={props.imgUrl} alt="sneaker" />
-      <h5>{props.title}</h5>
+      <img height={112} width={133} src={imgUrl} alt="sneaker" />
+      <h5>{title}</h5>
       <div className="d-flex justify-between align-center">
         <div className="d-flex flex-column  ">
           <span>price</span>
-          <b>{props.price} $</b>
+          <b>{price} $</b>
         </div>
 
         <img
