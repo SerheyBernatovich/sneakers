@@ -6,6 +6,7 @@ import Header from './components/Header';
 function App() {
   const [items, setItems] = React.useState([]);
   const [cartItems, setCartItems] = React.useState([]);
+  const [searchValue, setSearchValue] = React.useState('');
   const [cartOpened, setCartOpened] = React.useState(false);
 
   React.useEffect(() => {
@@ -19,6 +20,9 @@ function App() {
   const onAddToCart = (obj) => {
     setCartItems((prev) => [...prev, obj]);
   };
+  const onChangeSearchInput = (event) => {
+    setSearchValue(event.target.value);
+  };
   return (
     <div className="wrapper clear">
       {cartOpened && (
@@ -27,16 +31,33 @@ function App() {
       <Header onClickCart={() => setCartOpened(true)} />
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
-          <h1>All sneakers</h1>
+          <h1>
+            {searchValue
+              ? `Search on request:'${searchValue}'`
+              : 'All sneakers '}
+          </h1>
           <div className="search-block d-flex">
             <img src="img/search.svg" alt="Search"></img>
-            <input placeholder="Search..."></input>
+            {searchValue && (
+              <img
+                onClick={() => setSearchValue('')}
+                className="clear cu-p"
+                src="img/btn-remove.svg"
+                alt="Ciose"
+              />
+            )}
+            <input
+              value={searchValue}
+              onChange={onChangeSearchInput}
+              placeholder="Search..."
+            ></input>
           </div>
         </div>
 
         <div className="d-flex flex-wrap">
           {items.map((item) => (
             <Card
+              key={item.imgUrl}
               title={item.title}
               price={item.price}
               imgUrl={item.imgUrl}
