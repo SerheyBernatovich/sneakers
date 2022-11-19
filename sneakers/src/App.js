@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route } from 'react-router-dom';
 import axios from 'axios';
 import Card from './components/Card';
 import Drawer from './components/Draver';
@@ -61,6 +62,7 @@ function App() {
         />
       )}
       <Header onClickCart={() => setCartOpened(true)} />
+      <Route path="/" exact></Route>
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>
