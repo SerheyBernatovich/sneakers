@@ -4,6 +4,8 @@ import axios from 'axios';
 import Card from './components/Card';
 import Drawer from './components/Draver';
 import Header from './components/Header';
+import Home from './pages/Home';
+import Favorites from './pages/Favorites';
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -25,6 +27,9 @@ function App() {
     axios
       .get('https://636b93f17f47ef51e134692f.mockapi.io/Cart')
       .then((res) => setCartItems(res.data));
+    axios
+      .get('https://636b93f17f47ef51e134692f.mockapi.io/favorites')
+      .then((res) => setFavorites(res.data));
   }, []);
 
   const onAddToCart = (obj) => {
@@ -38,16 +43,25 @@ function App() {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const onAddToFavorite = (obj) => {
-    axios.post('https://636b93f17f47ef51e134692f.mockapi.io/favorites', obj);
-    setFavorites((prev) => [...prev, obj]);
+  const onAddToFavorite = async (obj) => {
+    // console.log(obj);
+    try {
+      if (favorites.find((favObj) => favObj.id === obj.id)) {
+        axios.delete(
+          `https://636b93f17f47ef51e134692f.mockapi.io/favorites/${obj.id}`
+        );
+        // setFavorites((prev) => prev.filter((item) => item.id !== obj.id));
+      } else {
+        const { data } = await axios.post(
+          'https://636b93f17f47ef51e134692f.mockapi.io/favorites',
+          obj
+        );
+        setFavorites((prev) => [...prev, data]);
+      }
+    } catch (error) {
+      alert('error in favorires');
+    }
   };
-
-  // const onRemovFavorite = (id) => {
-  //   // console.log(id);
-  //   axios.delete(`https://636b93f17f47ef51e134692f.mockapi.io/Cart/${id}`);
-  //   setFavorites((prev) => prev.filter((item) => item.id !== id));
-  // };
 
   const onChangeSearchInput = (event) => {
     setSearchValue(event.target.value);
@@ -62,8 +76,20 @@ function App() {
         />
       )}
       <Header onClickCart={() => setCartOpened(true)} />
-      <Route path="/" exact></Route>
-      <div className="content p-40">
+      <Route path="/" exact>
+        <Home
+          items={items}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          onChangeSearchInput={onChangeSearchInput}
+          onAddToFavorite={onAddToFavorite}
+          onAddToCart={onAddToCart}
+        />
+      </Route>
+      <Route path="/favorites" exact>
+        <Favorites items={favorites} onAddToFavorite={onAddToFavorite} />
+      </Route>
+      {/* <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>
             {searchValue
@@ -104,7 +130,7 @@ function App() {
               />
             ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
