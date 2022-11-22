@@ -33,8 +33,19 @@ function App() {
   }, []);
 
   const onAddToCart = (obj) => {
-    axios.post('https://636b93f17f47ef51e134692f.mockapi.io/Cart', obj);
-    setCartItems((prev) => [...prev, obj]);
+    try {
+      if (cartItems.find((item) => Number(item.id) === Number(obj.id))) {
+        axios.delete(
+          `https://636b93f17f47ef51e134692f.mockapi.io/Cart/${obj.id}`
+        );
+        setCartItems((prev) =>
+          prev.filter((item) => Number(item.id) !== Number(obj.id))
+        );
+      } else {
+        axios.post('https://636b93f17f47ef51e134692f.mockapi.io/Cart', obj);
+        setCartItems((prev) => [...prev, obj]);
+      }
+    } catch (error) {}
   };
 
   const onRemoveItem = (id) => {
@@ -79,6 +90,7 @@ function App() {
       <Route path="/" exact>
         <Home
           items={items}
+          cartItems={cartItems}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
           onChangeSearchInput={onChangeSearchInput}
