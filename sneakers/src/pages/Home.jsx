@@ -43,7 +43,9 @@ function Home({
               key={item.imgUrl}
               onFavorite={(obj) => onAddToFavorite(obj)}
               onPlus={(obj) => onAddToCart(obj)}
-              added={cartItems.some((obj) => obj.id === item.id)}
+              added={cartItems.some(
+                (obj) => Number(obj.id) === Number(item.id)
+              )}
               {...item}
             />
           ))}

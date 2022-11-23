@@ -20,16 +20,23 @@ function App() {
     //     return res.json();
     //   })
     //   .then((json) => setItems(json));
+    async function fetchData() {
+      const cartResponse = await axios.get(
+        'https://636b93f17f47ef51e134692f.mockapi.io/Cart'
+      );
 
-    axios
-      .get('https://636b93f17f47ef51e134692f.mockapi.io/item')
-      .then((res) => setItems(res.data));
-    axios
-      .get('https://636b93f17f47ef51e134692f.mockapi.io/Cart')
-      .then((res) => setCartItems(res.data));
-    axios
-      .get('https://636b93f17f47ef51e134692f.mockapi.io/favorites')
-      .then((res) => setFavorites(res.data));
+      const favoritesResponse = await axios.get(
+        'https://636b93f17f47ef51e134692f.mockapi.io/favorites'
+      );
+      const itemResponse = await axios.get(
+        'https://636b93f17f47ef51e134692f.mockapi.io/item'
+      );
+
+      setCartItems(cartResponse.data);
+      setFavorites(favoritesResponse.data);
+      setItems(itemResponse.data);
+    }
+    fetchData();
   }, []);
 
   const onAddToCart = (obj) => {

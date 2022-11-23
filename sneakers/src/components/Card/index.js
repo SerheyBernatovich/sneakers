@@ -1,4 +1,5 @@
 import React from 'react';
+import ContentLoader from 'react-content-loader';
 import { useState } from 'react';
 import styles from './Card.module.scss';
 
@@ -11,6 +12,7 @@ function Card({
   price,
   favorited = false,
   added = false,
+  loading = false,
 }) {
   const [isAdded, setIsAdded] = useState(added);
   const [isFavorite, setIsFavorite] = useState(favorited);
@@ -29,27 +31,52 @@ function Card({
   // }, [isAdded]);
   return (
     <div className={styles.card}>
-      <div className={styles.favorite} onClick={onClickFavorite}>
-        <img
-          src={isFavorite ? 'img/liked.svg' : 'img/unliked.svg'}
-          alt="Unliked"
-        />
-      </div>
-      <img height={112} width={133} src={imgUrl} alt="sneaker" />
-      <h5>{title}</h5>
-      <div className="d-flex justify-between align-center">
-        <div className="d-flex flex-column  ">
-          <span>price</span>
-          <b>{price} $</b>
-        </div>
+      {loading ? (
+        <ContentLoader
+          speed={2}
+          width={155}
+          height={265}
+          viewBox="0 0 160 265"
+          backgroundColor="#f3f3f3"
+          foregroundColor="#ecebeb"
+        >
+          <rect x="0" y="3" rx="10" ry="10" width="150" height="155" />
+          <rect x="60" y="100" rx="0" ry="0" width="57" height="27" />
+          <rect x="0" y="400" rx="0" ry="0" width="400" height="78" />
+          <rect x="98" y="149" rx="0" ry="0" width="2" height="30" />
+          <rect x="89" y="137" rx="0" ry="0" width="1" height="5" />
+          <rect x="76" y="104" rx="0" ry="0" width="80" height="2" />
+          <rect x="90" y="183" rx="0" ry="0" width="0" height="1" />
+          <rect x="0" y="167" rx="5" ry="5" width="150" height="15" />
+          <rect x="0" y="195" rx="5" ry="5" width="100" height="15" />
+          <rect x="0" y="233" rx="5" ry="5" width="80" height="25" />
+          <rect x="124" y="230" rx="10" ry="10" width="32" height="32" />
+        </ContentLoader>
+      ) : (
+        <>
+          <div className={styles.favorite} onClick={onClickFavorite}>
+            <img
+              src={isFavorite ? 'img/liked.svg' : 'img/unliked.svg'}
+              alt="Unliked"
+            />
+          </div>
+          <img height={112} width={133} src={imgUrl} alt="sneaker" />
+          <h5>{title}</h5>
+          <div className="d-flex justify-between align-center">
+            <div className="d-flex flex-column  ">
+              <span>price</span>
+              <b>{price} $</b>
+            </div>
 
-        <img
-          className={styles.plus}
-          onClick={onClickPlus}
-          src={isAdded ? 'img/btn-checked.svg' : 'img/btn-plus.svg'}
-          alt="Plus"
-        />
-      </div>
+            <img
+              className={styles.plus}
+              onClick={onClickPlus}
+              src={isAdded ? 'img/btn-checked.svg' : 'img/btn-plus.svg'}
+              alt="Plus"
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
