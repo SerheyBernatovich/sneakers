@@ -46,6 +46,7 @@ function Home({
               added={cartItems.some(
                 (obj) => Number(obj.id) === Number(item.id)
               )}
+              loading={false}
               {...item}
             />
           ))}

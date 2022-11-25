@@ -34,8 +34,8 @@ function Card({
       {loading ? (
         <ContentLoader
           speed={2}
-          width={155}
-          height={265}
+          width={165}
+          height={250}
           viewBox="0 0 160 265"
           backgroundColor="#f3f3f3"
           foregroundColor="#ecebeb"
@@ -60,7 +60,7 @@ function Card({
               alt="Unliked"
             />
           </div>
-          <img height={112} width={133} src={imgUrl} alt="sneaker" />
+          <img height="100%" width={135} src={imgUrl} alt="sneaker" />
           <h5>{title}</h5>
           <div className="d-flex justify-between align-center">
             <div className="d-flex flex-column  ">
