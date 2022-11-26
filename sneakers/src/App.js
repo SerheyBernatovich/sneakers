@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
-import Card from './components/Card';
+import AppContext from './context';
 import Drawer from './components/Draver';
 import Header from './components/Header';
 import Home from './pages/Home';
@@ -13,6 +13,7 @@ function App() {
   const [favorites, setFavorites] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState('');
   const [cartOpened, setCartOpened] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     // fetch('https://636b93f17f47ef51e134692f.mockapi.io/item')
@@ -21,6 +22,7 @@ function App() {
     //   })
     //   .then((json) => setItems(json));
     async function fetchData() {
+      setIsLoading(true);
       const cartResponse = await axios.get(
         'https://636b93f17f47ef51e134692f.mockapi.io/Cart'
       );
@@ -31,6 +33,7 @@ function App() {
       const itemResponse = await axios.get(
         'https://636b93f17f47ef51e134692f.mockapi.io/item'
       );
+      setIsLoading(false);
 
       setCartItems(cartResponse.data);
       setFavorites(favoritesResponse.data);
@@ -64,9 +67,12 @@ function App() {
   const onAddToFavorite = async (obj) => {
     // console.log(obj);
     try {
-      if (favorites.find((favObj) => favObj.id === obj.id)) {
+      if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) {
         axios.delete(
           `https://636b93f17f47ef51e134692f.mockapi.io/favorites/${obj.id}`
+        );
+        setFavorites((prev) =>
+          prev.filter((item) => Number(item.id) !== Number(obj.id))
         );
         // setFavorites((prev) => prev.filter((item) => item.id !== obj.id));
       } else {
@@ -84,31 +90,41 @@ function App() {
   const onChangeSearchInput = (event) => {
     setSearchValue(event.target.value);
   };
+
+  const isItemAdded = (id) =>
+    cartItems.some((obj) => Number(obj.id) === Number(id));
   return (
-    <div className="wrapper clear">
-      {cartOpened && (
-        <Drawer
-          items={cartItems}
-          onClose={() => setCartOpened(false)}
-          onRemove={onRemoveItem}
-        />
-      )}
-      <Header onClickCart={() => setCartOpened(true)} />
-      <Route path="/" exact>
-        <Home
-          items={items}
-          cartItems={cartItems}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          onChangeSearchInput={onChangeSearchInput}
-          onAddToFavorite={onAddToFavorite}
-          onAddToCart={onAddToCart}
-        />
-      </Route>
-      <Route path="/favorites" exact>
-        <Favorites items={favorites} onAddToFavorite={onAddToFavorite} />
-      </Route>
-      {/* <div className="content p-40">
+    <AppContext.Provider
+      value={{ onAddToFavorite, items, cartItems, favorites, isItemAdded }}
+    >
+      <div className="wrapper clear">
+        {cartOpened && (
+          <Drawer
+            items={cartItems}
+            onClose={() => setCartOpened(false)}
+            onRemove={onRemoveItem}
+          />
+        )}
+        <Header onClickCart={() => setCartOpened(true)} />
+        <Route path="/" exact>
+          <Home
+            items={items}
+            cartItems={cartItems}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            onChangeSearchInput={onChangeSearchInput}
+            onAddToFavorite={onAddToFavorite}
+            onAddToCart={onAddToCart}
+            isLoading={isLoading}
+          />
+        </Route>
+        <Route path="/favorites" exact>
+          <Favorites
+          // items={favorites}
+          // onAddToFavorite={onAddToFavorite}
+          />
+        </Route>
+        {/* <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>
             {searchValue
@@ -150,7 +166,8 @@ function App() {
             ))}
         </div>
       </div> */}
-    </div>
+      </div>
+    </AppContext.Provider>
   );
 }
 
