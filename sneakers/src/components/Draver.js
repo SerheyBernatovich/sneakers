@@ -1,4 +1,12 @@
+import React from 'react';
+import Info from './info';
+
 function Drawer({ onClose, items, onRemove }) {
+  const [isOrderComplete, setIsOrderComplete] = React.useState(false);
+
+  const onClickOrder = () => {
+    setIsOrderComplete(true);
+  };
   return (
     <div className="overlay">
       <div className="drawer">
@@ -12,7 +20,7 @@ function Drawer({ onClose, items, onRemove }) {
           />
         </h2>
         {items.length > 0 ? (
-          <div>
+          <div className="d-flex flex-column flex">
             <div className="items">
               {items.map((obj, index) => (
                 <div
@@ -49,18 +57,23 @@ function Drawer({ onClose, items, onRemove }) {
                   <b>25 $</b>
                 </li>
               </ul>
-              <button className="greenButton">
+              <button onClick={onClickOrder} className="greenButton">
                 Things <img src="img/arrow.svg" alt="Arrow" />
               </button>
             </div>
           </div>
         ) : (
-          <div>
-            <h2>Cart is empty</h2>
-            <button onClick={onClose} className="greenButton">
-              Return <img src="img/arrow.svg" alt="Arrow" />
-            </button>
-          </div>
+          <Info
+            title="Cart is empty"
+            description="Add some sneaker"
+            image="/img/empty-cart.jpg"
+          />
+          // <div>
+          //   <h2>Cart is empty</h2>
+          //   <button onClick={onClose} className="greenButton">
+          //     Return <img src="img/arrow.svg" alt="Arrow" />
+          //   </button>
+          // </div>
         )}
 
         {/* <div className="cartTotalBlock">
