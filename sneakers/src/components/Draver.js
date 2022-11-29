@@ -1,11 +1,39 @@
 import React from 'react';
+import axios from 'axios';
+import AppContext from '../context';
 import Info from './info';
 
-function Drawer({ onClose, items, onRemove }) {
-  const [isOrderComplete, setIsOrderComplete] = React.useState(false);
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const onClickOrder = () => {
-    setIsOrderComplete(true);
+function Drawer({ onClose, items, onRemove }) {
+  const { cartItems, setCartItems } = React.useContext(AppContext);
+  const [orderId, setOrderId] = React.useState(null);
+  const [isOrderComplete, setIsOrderComplete] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const onClickOrder = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.post(
+        'https://636b93f17f47ef51e134692f.mockapi.io/orders',
+        { items: cartItems }
+      );
+
+      setOrderId(data.id);
+      setIsOrderComplete(true);
+      setCartItems([]);
+
+      for (let i = 0; i < cartItems.length; i++) {
+        const item = cartItems[i];
+        await axios.delete(
+          'https://636b93f17f47ef51e134692f.mockapi.io/Cart/' + item.id
+        );
+        await delay(1000);
+      }
+    } catch (error) {
+      alert('Can not make order:(');
+    }
+    setIsLoading(false);
   };
   return (
     <div className="overlay">
@@ -57,16 +85,28 @@ function Drawer({ onClose, items, onRemove }) {
                   <b>25 $</b>
                 </li>
               </ul>
-              <button onClick={onClickOrder} className="greenButton">
+              <button
+                disabled={isLoading}
+                onClick={onClickOrder}
+                className="greenButton"
+              >
                 Things <img src="img/arrow.svg" alt="Arrow" />
               </button>
             </div>
           </div>
         ) : (
           <Info
-            title="Cart is empty"
-            description="Add some sneaker"
-            image="/img/empty-cart.jpg"
+            title={isOrderComplete ? 'Order made' : 'Cart is empty'}
+            description={
+              isOrderComplete
+                ? `Your order #${orderId} complit`
+                : 'Add some sneaker'
+            }
+            image={
+              isOrderComplete
+                ? '/img/complete-order.jpg'
+                : '/img/empty-cart.jpg'
+            }
           />
           // <div>
           //   <h2>Cart is empty</h2>
