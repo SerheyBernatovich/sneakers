@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from './context';
-import Drawer from './components/Draver';
+import Drawer from './components/Drawer';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
@@ -106,13 +106,19 @@ function App() {
       }}
     >
       <div className="wrapper clear">
-        {cartOpened && (
+        {/* {cartOpened && (
           <Drawer
             items={cartItems}
             onClose={() => setCartOpened(false)}
             onRemove={onRemoveItem}
           />
-        )}
+        )} */}
+        <Drawer
+          items={cartItems}
+          onClose={() => setCartOpened(false)}
+          onRemove={onRemoveItem}
+          opened={cartOpened}
+        />
         <Header onClickCart={() => setCartOpened(true)} />
         <Route path="/" exact>
           <Home
