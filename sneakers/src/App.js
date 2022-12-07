@@ -23,46 +23,61 @@ function App() {
     //   })
     //   .then((json) => setItems(json));
     async function fetchData() {
-      setIsLoading(true);
-      const cartResponse = await axios.get(
-        'https://636b93f17f47ef51e134692f.mockapi.io/Cart'
-      );
+      try {
+        setIsLoading(true);
+        const cartResponse = await axios.get(
+          'https://636b93f17f47ef51e134692f.mockapi.io/Cart'
+        );
 
-      const favoritesResponse = await axios.get(
-        'https://636b93f17f47ef51e134692f.mockapi.io/favorites'
-      );
-      const itemResponse = await axios.get(
-        'https://636b93f17f47ef51e134692f.mockapi.io/item'
-      );
-      setIsLoading(false);
-
-      setCartItems(cartResponse.data);
-      setFavorites(favoritesResponse.data);
-      setItems(itemResponse.data);
+        const favoritesResponse = await axios.get(
+          'https://636b93f17f47ef51e134692f.mockapi.io/favorites'
+        );
+        const itemResponse = await axios.get(
+          'https://636b93f17f47ef51e134692f.mockapi.io/item'
+        );
+        setIsLoading(false);
+        setCartItems(cartResponse.data);
+        setFavorites(favoritesResponse.data);
+        setItems(itemResponse.data);
+      } catch (error) {
+        alert('Mistake in response data;(');
+      }
     }
     fetchData();
   }, []);
 
-  const onAddToCart = (obj) => {
+  const onAddToCart = async (obj) => {
     try {
-      if (cartItems.find((item) => Number(item.id) === Number(obj.id))) {
-        axios.delete(
-          `https://636b93f17f47ef51e134692f.mockapi.io/Cart/${obj.id}`
-        );
+      const findItem = cartItems.find(
+        (item) => Number(item.parentId) === Number(obj.id)
+      );
+      if (findItem) {
         setCartItems((prev) =>
-          prev.filter((item) => Number(item.id) !== Number(obj.id))
+          prev.filter((item) => Number(item.parentId) !== Number(obj.id))
+        );
+        await axios.delete(
+          `https://636b93f17f47ef51e134692f.mockapi.io/Cart/${findItem.id}`
         );
       } else {
-        axios.post('https://636b93f17f47ef51e134692f.mockapi.io/Cart', obj);
-        setCartItems((prev) => [...prev, obj]);
+        const { data } = await axios.post(
+          'https://636b93f17f47ef51e134692f.mockapi.io/Cart',
+          obj
+        );
+        setCartItems((prev) => [...prev, data]);
       }
-    } catch (error) {}
+    } catch (error) {
+      alert('Mistake in add to cart;(');
+    }
   };
 
   const onRemoveItem = (id) => {
-    // console.log(id);
-    axios.delete(`https://636b93f17f47ef51e134692f.mockapi.io/Cart/${id}`);
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    try {
+      // console.log(id);
+      setCartItems((prev) => prev.filter((item) => item.id !== id));
+      axios.delete(`https://636b93f17f47ef51e134692f.mockapi.io/Cart/${id}`);
+    } catch (error) {
+      alert('Mistake remove from the cart;(');
+    }
   };
 
   const onAddToFavorite = async (obj) => {
@@ -82,7 +97,7 @@ function App() {
         setFavorites((prev) => [...prev, data]);
       }
     } catch (error) {
-      alert('error in favorires');
+      alert('error add in favorires');
     }
   };
 
@@ -91,7 +106,8 @@ function App() {
   };
 
   const isItemAdded = (id) =>
-    cartItems.some((obj) => Number(obj.id) === Number(id));
+    cartItems.some((obj) => Number(obj.parentId) === Number(id));
+
   return (
     <AppContext.Provider
       value={{

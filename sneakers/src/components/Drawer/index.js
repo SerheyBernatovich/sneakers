@@ -55,7 +55,7 @@ function Drawer({ onClose, items = [], onRemove, opened }) {
         </h2>
         {items.length > 0 ? (
           <div className="d-flex flex-column flex">
-            <div className="items">
+            <div className="items flex">
               {items.map((obj, index) => (
                 <div
                   key={obj.id}
