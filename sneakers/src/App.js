@@ -59,11 +59,22 @@ function App() {
           `https://636b93f17f47ef51e134692f.mockapi.io/Cart/${findItem.id}`
         );
       } else {
+        setCartItems((prev) => [...prev, obj]);
         const { data } = await axios.post(
           'https://636b93f17f47ef51e134692f.mockapi.io/Cart',
           obj
         );
-        setCartItems((prev) => [...prev, data]);
+        setCartItems((prev) =>
+          prev.map((item) => {
+            if (item.parentId === data.parentId) {
+              return {
+                ...item,
+                id: data.id,
+              };
+            }
+            return item;
+          })
+        );
       }
     } catch (error) {
       alert('Mistake in add to cart;(');
@@ -136,7 +147,7 @@ function App() {
           opened={cartOpened}
         />
         <Header onClickCart={() => setCartOpened(true)} />
-        <Route path="/" exact>
+        <Route path="" exact>
           <Home
             items={items}
             cartItems={cartItems}
@@ -148,11 +159,11 @@ function App() {
             isLoading={isLoading}
           />
         </Route>
-        <Route path="/favorites">
+        <Route path="favorites">
           <Favorites />
         </Route>
 
-        <Route path="/orders">
+        <Route path="orders">
           <Orders />
         </Route>
       </div>
